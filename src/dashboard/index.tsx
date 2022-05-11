@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as React from "react";
 import { useState } from "react";
+import { ThemeColorContext } from "../theme/ThemeColor";
 import NewProduct from "./NewProduct";
 import Product from "./product";
 import ProductDetail from "./ProductDetail";
@@ -8,6 +9,8 @@ import ProductDetail from "./ProductDetail";
 interface DashboardProps {}
 
 function Dashboard(props: DashboardProps) {
+  const colorContext = React.useContext(ThemeColorContext);
+
   const [products, setProducts] = React.useState([
     { id: 1, name: "iphone", price: 100 },
     { id: 2, name: "macbook", price: 200 },
@@ -52,7 +55,7 @@ function Dashboard(props: DashboardProps) {
 
   return (
     <div>
-      <div>My Dashboard</div>
+      <div style={{ color: colorContext.color }}>My Dashboard</div>
       <div>
         {products.map((p) => (
           <Product
