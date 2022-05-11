@@ -1,19 +1,30 @@
+import {
+  Box,
+  Grid,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import axios from "axios";
 import * as React from "react";
 import { useState } from "react";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { ThemeColorContext } from "../theme/ThemeColor";
 import NewProduct from "./NewProduct";
-import Product from "./product";
 import ProductDetail from "./ProductDetail";
+import Products from "./Products";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 interface DashboardProps {}
 
 function Dashboard(props: DashboardProps) {
   const colorContext = React.useContext(ThemeColorContext);
+  const navigate = useNavigate();
 
   const [products, setProducts] = React.useState([
-    { id: 1, name: "iphone", price: 100 },
-    { id: 2, name: "macbook", price: 200 },
+    { id: 1, name: "iPhone", price: 100 },
+    { id: 2, name: "MacBook", price: 200 },
   ]);
 
   const fetchData = async () => {
@@ -48,31 +59,57 @@ function Dashboard(props: DashboardProps) {
       setProducts((products) => {
         return [...products, result.data];
       });
+
+      navigate("/products")
     }
   };
 
   const [selectedProductId, setSelectedProductId] = useState<number>(0);
 
   return (
-    <div>
-      <div style={{ color: colorContext.color }}>My Dashboard</div>
-      <div>
-        {products.map((p) => (
-          <Product
-            onClick={(id) => {
-              setSelectedProductId(id);
-            }}
-            key={p.id}
-            id={p.id}
-            name={p.name}
-            price={p.price}
+      <Box>
+        <Link to={"/products"}>
+          <ListItemButton>
+            <ListItemIcon>
+              <InventoryIcon />
+            </ListItemIcon>
+            <ListItemText primary="Products" />
+          </ListItemButton>
+        </Link>
+        <Link to={"/new-product"}>
+          <ListItemButton>
+            <ListItemIcon>
+              <AddCircleOutlineIcon />
+            </ListItemIcon>
+            <ListItemText primary="New product" />
+          </ListItemButton>
+        </Link>
+        <Routes>
+          <Route
+            path="/products"
+            element={
+              <Products products={products} onSelect={(id) => {
+                setSelectedProductId(id)
+                navigate(`/products/${id}`)
+              }} />
+            }
           />
-        ))}
-      </div>
-      <NewProduct onChange={onFieldsChanged} onSave={onNewProduct} />
+          <Route
+            path="/new-product"
+            element={
+              <NewProduct onChange={onFieldsChanged} onSave={onNewProduct} />
+            }
+          />
+          <Route
+            path={`/products/:id`}
+            element={
+              <ProductDetail id={selectedProductId} />
+            }
+          />
+        </Routes>
 
-      <ProductDetail id={selectedProductId} />
-    </div>
+        {/* <div style={{ color: colorContext.color }}>My Dashboard</div> */}
+      </Box>
   );
 }
 

@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { Grid, Paper } from "@mui/material";
+import * as React from "react";
 
 interface IProductProps {
   id: number;
@@ -8,13 +9,22 @@ interface IProductProps {
 }
 
 const Product: React.FunctionComponent<IProductProps> = (props) => {
-  const { name, price, onClick } = props; 
-  return <div onClick={() => {
-    onClick(props.id);
-  }}>
-  <h1>{name}</h1>
-  <h4>{price}</h4>
-</div>;
+  const { name, price, onClick } = props;
+  
+  return (
+    <Grid item xs={3}>
+    <div
+      onClick={() => {
+        onClick(props.id);
+      }}
+    >
+        <Paper>
+          <h1>{name}</h1>
+          <h4>{price}</h4>
+        </Paper>
+    </div>
+      </Grid>
+  );
 };
 
 export default Product;
