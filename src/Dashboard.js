@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Product from "./Product";
+import axios from "axios";
 import NewProduct from "./NewProduct";
 import ProductDetail from "./ProductDetail";
 import Products from "./Products";
@@ -7,20 +8,18 @@ import { Link, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 
 const Dashboard = () => {
-  const [products, setProduct] = useState([
-    {
-      id: 1,
-      name: "Product 1",
-      price: "100",
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      price: "200",
-    },
-  ]);
+  const [products, setProduct] = useState([]);
   const [newProduct, setNewProduct] = useState({ name: "", price: 0 });
   const [selected, setSelected] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      let response = await axios.get("http://localhost:8080/api/v1/products");
+      if (response.status) {
+        setProduct(response.data);
+      }
+    })();
+  }, []);
 
   const onChangeProduct = (evt) => {
     let obj = { ...newProduct };
